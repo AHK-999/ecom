@@ -40,12 +40,10 @@ orderRouter.post(
       user: req.user._id,
     });
 
-    // console.log('req.user', req.user);
-
     const createdOrder = await order.save();
 
     const razorpayData = await razorpayInstance.orders.create({
-      amount: req.body.totalPrice * 100,
+      amount: parseInt(req.body.totalPrice * 100),
       currency: "INR",
       receipt: createdOrder.id,
     });

@@ -1,44 +1,26 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { detailsOrder, payOrder } from "../actions/orderActions";
+import { detailsOrder } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
 export default function OrderScreen(props) {
-  // Get the orderId from params
   const orderId = props.match.params.id;
 
-  //get orderDetails from redux store
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
-  //getorderPay from redux store
   const orderPay = useSelector((state) => state.orderPay);
-  const {
-    error: errorPay,
-    success: successPay,
-    loading: loadingPay,
-  } = orderPay;
+  const { success: successPay } = orderPay;
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // console.log(order._id);
-    // dispatch(detailsOrder(orderId));
-
-    // disptach the orderDetail action if there is NO orderId, or payment is not successful, or order._id not equals to orderId
     if (!order._id || successPay || (order && order._id !== orderId)) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch(detailsOrder(orderId));
     }
-    // else {
-    //   //check if payment method has been loaded, if not, call addPayPalScript function
-    //   if (!order.isPaid) {
-    //     //
-    //   }
-    // }
   }, [dispatch, orderId, order, successPay]);
 
   return loading ? (
@@ -92,7 +74,7 @@ export default function OrderScreen(props) {
                         </div>
 
                         <div>
-                          {item.qty} x Rs. {item.price} = $
+                          {item.qty} x Rs. {item.price} = Rs.
                           {item.qty * item.price}
                         </div>
                       </div>
